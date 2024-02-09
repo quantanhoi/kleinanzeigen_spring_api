@@ -1,0 +1,90 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="christian.f.schmitt@stud.h-da.de" id="2023-12-04-0">
+        <createTable tableName="AD">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TYPE" type="ENUM('OFFER','REQUEST')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CATEGORY_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TITLE" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRICE" type="INT"/>
+            <column name="LOCATION" type="VARCHAR(100)"/>
+            <column name="CREATED" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="CATEGORY">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="NAME" type="VARCHAR(100)"/>
+        </createTable>
+        <createTable tableName="USER">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR(500)"/>
+            <column name="LAST_NAME" type="VARCHAR(500)"/>
+            <column name="PHONE" type="VARCHAR(100)"/>
+            <column name="LOCATION" type="VARCHAR(100)"/>
+            <column name="CREATED" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex indexName="CATEGORY_ID" tableName="AD">
+            <column name="CATEGORY_ID"/>
+        </createIndex>
+        <createIndex indexName="USER_ID" tableName="AD">
+            <column name="USER_ID"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="CATEGORY_ID" baseTableName="AD" constraintName="AD_ibfk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="CATEGORY" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="AD" constraintName="AD_ibfk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="USER" validate="true"/>
+    </changeSet>
+
+    <changeSet author="christian.f.schmitt@stud.h-da.de" id="2023-12-04-1">
+        <createTable tableName="NOTEPAD">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="USER_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AD_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NOTE" type="VARCHAR(256)"/>
+            <column name="CREATED" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex indexName="AD_ID" tableName="NOTEPAD">
+            <column name="AD_ID"/>
+        </createIndex>
+        <createIndex indexName="USER_ID_NOTEPAD" tableName="NOTEPAD">
+            <column name="USER_ID"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="AD_ID" baseTableName="NOTEPAD" constraintName="NOTEPAD_ibfk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="AD" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="NOTEPAD" constraintName="NOTEPAD_ibfk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="USER" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
